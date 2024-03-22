@@ -41,6 +41,10 @@ def train(student, teacher=None, config={}):
     best_acc = 0
     criterion = nn.CrossEntropyLoss()
     optimizer = torch.optim.SGD(student.parameters(), lr=lr, momentum=momentum)
+    scheduler = torch.optim.lr_scheduler.LambdaLR(optimizer=optimizer,
+                                              lr_lambda=lambda epoch: 0.1 if epoch < epochs // 2 else (0.01 if epoch < epochs * 3 // 4 else 0.001),
+                                              last_epoch=-1,
+                                              verbose=False)
     for epoch in range(epochs):
         student.train()
         for batch_idx, (img, label) in enumerate(train_loader):
@@ -59,6 +63,7 @@ def train(student, teacher=None, config={}):
             
             loss.backward()
             optimizer.step()
+        scheduler.step()
 
         print(f"epoch: {epoch}/{epochs}\tloss: {loss}")
         val_acc = validate(model=student, data_loader=test_loader, device=device)
