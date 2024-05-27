@@ -13,8 +13,15 @@ def get_args():
     return args
 
 def import_model(model_name):
-    module = __import__(f'models.{model_name}', fromlist=[model_name])
-    return getattr(module, "Model")
+    if model_name.startswith('resnet'):
+        module = __import__(f'models.resnet', fromlist=[model_name])
+        return getattr(module, model_name)
+    elif model_name.startswith('resnext'):
+        module = __import__(f'models.resnext', fromlist=[model_name])
+        return getattr(module, model_name)
+    else:
+        module = __import__(f'models.{model_name}', fromlist=[model_name])
+        return getattr(module, "Model")
 
 def test_model(model_name):
     _, test_loader = get_data_loaders()
