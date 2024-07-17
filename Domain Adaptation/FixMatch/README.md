@@ -1,0 +1,1 @@
+Test set: Average loss: 0.0068, Top-1 Accuracy: 8492/10000 (84.92000000%), Top-5 Accuracy: 9929/10000 (99.29000000%)

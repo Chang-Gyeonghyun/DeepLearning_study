@@ -1,4 +1,10 @@
 import torch
+import torch.nn as nn
+from torch.utils.data import DataLoader
+from torch.optim import lr_scheduler
+from dataloader import get_cifar10
+from model import WideResNet
+import numpy as np
 
 def test(args, test_loader, model, criterion, epoch):
     model.eval()
@@ -7,8 +13,7 @@ def test(args, test_loader, model, criterion, epoch):
     correct_top5 = 0
     with torch.no_grad():
         for data, target in test_loader:
-            if args['cuda']:
-                data, target = data.to(args['DEVICE']), target.to(args['DEVICE'])
+            data, target = data.to(args['DEVICE']), target.to(args['DEVICE'])
             output = model(data)
             test_loss += criterion(output, target).item()
 
@@ -29,3 +34,16 @@ def test(args, test_loader, model, criterion, epoch):
             correct_top5, len(test_loader.dataset), top5_acc))
 
     return top1_acc
+
+if __name__ == "__main__":
+    args={}
+    args['DEVICE'] = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+    train_labeled_dataset, train_unlabeled_dataset, test_dataset = get_cifar10('../../data/')
+    test_loader = DataLoader(test_dataset, batch_size=128, shuffle=True, num_workers=2)
+
+    model = WideResNet(depth=28, num_classes=10, widen_factor=10, drop_rate=0.3)
+    model.load_state_dict(torch.load('saved/BestModel.pth', map_location=torch.device('cpu')))
+    model = model.to(args['DEVICE'])
+    criterion  = nn.CrossEntropyLoss()
+    val_acc = test(args, test_loader , model, criterion, 1)

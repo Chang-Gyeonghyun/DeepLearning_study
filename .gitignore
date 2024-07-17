@@ -1,2 +1,3 @@
 # .gitignore
 /data/
+/Domain Adaptation/FixMatch/saved/
