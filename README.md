@@ -1,11 +1,11 @@
-## Benchmark_Architecture
+## CNN_Architecture
 
 이 디렉토리에는 CIFAR-100과 MNIST 데이터셋에 대한 벤치마크 아키텍처가 포함되어 있습니다. 각 데이터셋 폴더는 데이터, 모델, 유틸리티 및 학습과 테스트를 위한 스크립트를 조직화하는 구조를 가지고 있습니다.
 
 ### 디렉토리 구조
 
 ```
-Benchmark_Architecture/
+CNN_Architecture/
 ├── Cifar-100/
 │ ├── data/
 │ ├── models/
